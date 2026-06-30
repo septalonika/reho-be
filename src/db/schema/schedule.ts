@@ -9,6 +9,7 @@ import {
   pgEnum,
   unique,
   jsonb,
+  index,
 } from "drizzle-orm/pg-core";
 
 export const serviceTypeEnum = pgEnum("service_type", [
@@ -30,28 +31,40 @@ export const rosterRoleEnum = pgEnum("roster_role", [
   "kolektan",
 ]);
 
-export const services = pgTable("services", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  name: text("name").notNull(),
-  type: serviceTypeEnum("type").notNull(),
-  serviceDate: date("service_date").notNull(),
-  startTime: time("start_time"),
-  location: text("location"),
-  description: text("description"),
-  liturgy: jsonb("liturgy"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+export const services = pgTable(
+  "services",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    name: text("name").notNull(),
+    type: serviceTypeEnum("type").notNull(),
+    serviceDate: date("service_date").notNull(),
+    startTime: time("start_time"),
+    location: text("location"),
+    description: text("description"),
+    liturgy: jsonb("liturgy"),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("services_service_date_idx").on(t.serviceDate),
+  ]
+);
 
-export const members = pgTable("members", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  fullName: text("full_name").notNull(),
-  phone: text("phone"),
-  email: text("email"),
-  active: boolean("active").notNull().default(true),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+export const members = pgTable(
+  "members",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    fullName: text("full_name").notNull(),
+    phone: text("phone"),
+    email: text("email"),
+    active: boolean("active").notNull().default(true),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (t) => [
+    index("members_active_idx").on(t.active),
+  ]
+);
 
 export const rosterAssignments = pgTable(
   "roster_assignments",
@@ -66,7 +79,8 @@ export const rosterAssignments = pgTable(
     role: rosterRoleEnum("role").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (t) => ({
-    uniqueAssignment: unique().on(t.serviceId, t.memberId, t.role),
-  })
+  (t) => [
+    unique().on(t.serviceId, t.memberId, t.role),
+    index("roster_assignments_member_id_idx").on(t.memberId),
+  ]
 );
