@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { authRouter } from "../modules/auth/auth.routes";
+import { dashboardRouter } from "../modules/dashboard/dashboard.routes";
 import { devotionalsRouter } from "../modules/devotionals/devotionals.routes";
 import { bannersRouter } from "../modules/banners/banners.routes";
 import { bulletinsRouter } from "../modules/bulletins/bulletins.routes";
@@ -11,6 +13,8 @@ import { uploadsRouter } from "../modules/uploads/uploads.routes";
 
 export const router = Router();
 
+router.use("/auth", authRouter);
+router.use("/dashboard", dashboardRouter);
 router.use("/devotionals", devotionalsRouter);
 router.use("/banners", bannersRouter);
 router.use("/bulletins", bulletinsRouter);

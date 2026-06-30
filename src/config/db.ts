@@ -1,8 +1,9 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import { env } from "./env";
 import * as schema from "../db/schema";
 
-const pool = new Pool({ connectionString: env.DATABASE_URL });
+// Transaction pooler (port 6543) requires prepare: false
+const client = postgres(env.DATABASE_URL, { prepare: false });
 
-export const db = drizzle(pool, { schema });
+export const db = drizzle(client, { schema });
