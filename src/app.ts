@@ -8,14 +8,17 @@ import { env } from "./config/env";
 
 export const app = express();
 
+const corsOptions = {
+  origin: env.CORS_ORIGIN,
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+};
+
 app.use(helmet());
 app.use(morgan("dev"));
-app.use(
-  cors({
-    origin: env.CORS_ORIGIN,
-    credentials: true,
-  })
-);
+app.options("*", cors(corsOptions));
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/health", (_req, res) => res.json({ ok: true }));

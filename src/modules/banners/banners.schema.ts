@@ -5,8 +5,8 @@ export const createBannerSchema = z.object({
   imageUrl: z.string().url(),
   linkUrl: z.string().url().optional(),
   active: z.boolean().default(true),
-  startDate: z.string().optional(),
-  endDate: z.string().optional(),
+  startDate: z.string().nullable().optional(),
+  endDate: z.string().nullable().optional(),
   sortOrder: z.number().int().default(0),
 });
 
