@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# build
+dist/
+
+# env — keep .env.example
+.env
+.env.*
+!.env.example
+
+# drizzle
+src/db/migrations/meta/
+
+# logs
+*.log
+npm-debug.log*
+
+# os
+.DS_Store
+
+# ide
+.vscode/
+.idea/
+
+# claude
+skills-lock.json
+.agents/
+PLAN.md
+WIREFRAME.md
